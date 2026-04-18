@@ -250,7 +250,7 @@ function Hero() {
             margin: '0 auto 44px',
           }}
         >
-          I build fast, conversion-focused websites and AI automation tools that turn visitors into
+          We build fast, conversion-focused websites and AI automation tools that turn visitors into
           paying customers — without the agency price tag.
         </p>
 
@@ -1269,7 +1269,7 @@ function ContactForm() {
             Let's build something great.
           </h2>
           <p style={{ color: '#8888aa', fontSize: '16px', lineHeight: '1.6', margin: 0 }}>
-            Fill in your details and I'll get back to you within 24 hours.
+            Fill in your details and we will get back to you within 24 hours.
           </p>
         </div>
 
