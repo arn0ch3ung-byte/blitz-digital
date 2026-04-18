@@ -12,7 +12,6 @@ import {
   Menu,
   X,
   ChevronDown,
-  ExternalLink,
 } from 'lucide-react'
 
 /* ─── tiny reusable ────────────────────────────────────────────────────── */
@@ -1463,7 +1462,12 @@ function ContactForm() {
               Or email directly:{' '}
               <a
                 href="mailto:BlitzDigitalUK@outlook.com"
-                style={{ color: '#a78bfa', textDecoration: 'none' }}
+                onClick={(e) => {
+                  e.preventDefault()
+                  navigator.clipboard.writeText('BlitzDigitalUK@outlook.com')
+                }}
+                title="Click to copy"
+                style={{ color: '#a78bfa', textDecoration: 'none', cursor: 'copy' }}
               >
                 BlitzDigitalUK@outlook.com
               </a>
@@ -1475,105 +1479,7 @@ function ContactForm() {
   )
 }
 
-/* ─── Contact CTA ───────────────────────────────────────────────────────── */
 
-function Contact() {
-  const [copied, setCopied] = useState(false)
-
-  function handleEmailClick(e) {
-    e.preventDefault()
-    navigator.clipboard.writeText('BlitzDigitalUK@outlook.com').then(() => {
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    })
-  }
-
-  return (
-    <section
-      id="contact"
-      style={{
-        padding: '100px 24px',
-        textAlign: 'center',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
-    >
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background:
-            'radial-gradient(ellipse at 50% 60%, rgba(124,58,237,0.14) 0%, transparent 70%)',
-          pointerEvents: 'none',
-        }}
-      />
-
-      <div style={{ position: 'relative', maxWidth: '640px', margin: '0 auto' }}>
-        <Badge>
-          <Mail size={11} />
-          Let's Work Together
-        </Badge>
-        <h2
-          style={{
-            fontSize: 'clamp(28px, 4vw, 52px)',
-            fontWeight: '800',
-            letterSpacing: '-1.5px',
-            color: '#f0f0f8',
-            margin: '24px 0 16px',
-            lineHeight: '1.1',
-          }}
-        >
-          Ready to grow your business?
-        </h2>
-        <p
-          style={{
-            color: '#8888aa',
-            fontSize: '18px',
-            lineHeight: '1.65',
-            marginBottom: '40px',
-          }}
-        >
-          Drop me a message and I'll get back to you within 24 hours with a free consultation.
-        </p>
-
-        <a
-          href="mailto:BlitzDigitalUK@outlook.com"
-          onClick={handleEmailClick}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '10px',
-            background: copied
-              ? 'linear-gradient(135deg, #059669, #047857)'
-              : 'linear-gradient(135deg, #7c3aed, #2563eb)',
-            color: '#fff',
-            padding: '16px 32px',
-            borderRadius: '10px',
-            fontSize: '16px',
-            fontWeight: '700',
-            textDecoration: 'none',
-            boxShadow: copied
-              ? '0 0 48px rgba(5,150,105,0.4)'
-              : '0 0 48px rgba(124,58,237,0.38)',
-            transition: 'opacity 0.2s, transform 0.2s, background 0.3s, box-shadow 0.3s',
-            userSelect: 'none',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.opacity = '0.9'
-            e.currentTarget.style.transform = 'translateY(-2px)'
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.opacity = '1'
-            e.currentTarget.style.transform = 'translateY(0)'
-          }}
-        >
-          <Mail size={18} />
-          {copied ? 'Copied to clipboard!' : 'BlitzDigitalUK@outlook.com'}
-        </a>
-      </div>
-    </section>
-  )
-}
 
 /* ─── Footer ────────────────────────────────────────────────────────────── */
 
@@ -1637,12 +1543,108 @@ function ResponsiveStyle() {
   )
 }
 
+/* ─── Cookie Banner ─────────────────────────────────────────────────────── */
+
+function CookieBanner() {
+  const [visible, setVisible] = useState(() => {
+    return localStorage.getItem('cookie-consent') === null
+  })
+
+  function accept() {
+    localStorage.setItem('cookie-consent', 'accepted')
+    setVisible(false)
+  }
+
+  function decline() {
+    localStorage.setItem('cookie-consent', 'declined')
+    setVisible(false)
+  }
+
+  if (!visible) return null
+
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        bottom: '24px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 100,
+        width: 'calc(100% - 48px)',
+        maxWidth: '640px',
+        background: '#13131f',
+        border: '1px solid rgba(255,255,255,0.1)',
+        borderRadius: '14px',
+        padding: '20px 24px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: '16px',
+        flexWrap: 'wrap',
+        boxShadow: '0 8px 48px rgba(0,0,0,0.6)',
+      }}
+    >
+      <p style={{ margin: 0, fontSize: '13px', color: '#9090b0', lineHeight: '1.6', flex: 1, minWidth: '200px' }}>
+        We use essential cookies to make this site work. No tracking or advertising cookies.{' '}
+        <Link to="/privacy" style={{ color: '#a78bfa', textDecoration: 'none' }}>
+          Privacy Policy
+        </Link>
+      </p>
+      <div style={{ display: 'flex', gap: '10px', flexShrink: 0 }}>
+        <button
+          onClick={decline}
+          style={{
+            padding: '9px 18px',
+            borderRadius: '8px',
+            fontSize: '13px',
+            fontWeight: '600',
+            background: 'transparent',
+            border: '1px solid rgba(255,255,255,0.15)',
+            color: '#8888aa',
+            cursor: 'pointer',
+            transition: 'border-color 0.2s, color 0.2s',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.3)'
+            e.currentTarget.style.color = '#f0f0f8'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'
+            e.currentTarget.style.color = '#8888aa'
+          }}
+        >
+          Decline
+        </button>
+        <button
+          onClick={accept}
+          style={{
+            padding: '9px 18px',
+            borderRadius: '8px',
+            fontSize: '13px',
+            fontWeight: '700',
+            background: 'linear-gradient(135deg, #7c3aed, #2563eb)',
+            border: 'none',
+            color: '#fff',
+            cursor: 'pointer',
+            transition: 'opacity 0.2s',
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.85')}
+          onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+        >
+          Accept
+        </button>
+      </div>
+    </div>
+  )
+}
+
 /* ─── App ───────────────────────────────────────────────────────────────── */
 
 export default function App() {
   return (
     <>
       <ResponsiveStyle />
+      <CookieBanner />
       <Nav />
       <main>
         <Hero />
