@@ -1175,6 +1175,7 @@ function ContactForm() {
 
   const [sending, setSending] = useState(false)
   const [error, setError] = useState(null)
+  const [emailCopied, setEmailCopied] = useState(false)
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -1464,12 +1465,15 @@ function ContactForm() {
                 href="mailto:BlitzDigitalUK@outlook.com"
                 onClick={(e) => {
                   e.preventDefault()
-                  navigator.clipboard.writeText('BlitzDigitalUK@outlook.com')
+                  navigator.clipboard.writeText('BlitzDigitalUK@outlook.com').then(() => {
+                    setEmailCopied(true)
+                    setTimeout(() => setEmailCopied(false), 2000)
+                  })
                 }}
                 title="Click to copy"
-                style={{ color: '#a78bfa', textDecoration: 'none', cursor: 'copy' }}
+                style={{ color: emailCopied ? '#34d399' : '#a78bfa', textDecoration: 'none', cursor: 'copy', transition: 'color 0.2s' }}
               >
-                BlitzDigitalUK@outlook.com
+                {emailCopied ? 'Copied to your clipboard!' : 'BlitzDigitalUK@outlook.com'}
               </a>
             </p>
           </form>
